@@ -1,0 +1,32 @@
+@page
+@using Microsoft.AspNetCore.Mvc.Localization
+@using CRM_Code.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@using CRM_Code.Web.Pages.Authors
+@using CRM_Code.Authors;
+@using System.Globalization
+@inject IHtmlLocalizer<CRM_CodeResource> L
+@model CreateModalModel
+@{
+    Layout = null;
+}
+
+<form data-ajaxForm="true" asp-page="/Authors/CreateModal" autocomplete="off">
+    <abp-modal id="AuthorCreateModal">
+        <abp-modal-header title="@L["NewAuthor"].Value"></abp-modal-header>
+
+        <abp-modal-body>
+                    
+            <abp-input asp-for="Author.Name"/>
+
+            <abp-input asp-for="Author.Birthdate" value="@DateTime.Now.ToString("yyyy-MM-dd")" type="date"/>
+
+            <abp-input asp-for="Author.Active"/>
+
+                    
+                
+        </abp-modal-body>
+
+        <abp-modal-footer buttons="@(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>
+    </abp-modal>
+</form>

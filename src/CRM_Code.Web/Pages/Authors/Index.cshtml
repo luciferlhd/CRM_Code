@@ -1,0 +1,73 @@
+@page
+@using Microsoft.AspNetCore.Authorization
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@using CRM_Code.Permissions
+@using CRM_Code.Web.Pages.Authors
+@using CRM_Code.Web.Menus
+@using Microsoft.AspNetCore.Mvc.Localization
+@using CRM_Code.Localization
+@inject IHtmlLocalizer<CRM_CodeResource> L
+@inject IAuthorizationService Authorization
+@model IndexModel
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["Authors"].Value;
+    PageLayout.Content.MenuItemName = CRM_CodeMenus.Authors;
+}
+
+@section scripts
+{
+    <abp-script src="/Pages/Authors/index.js" />
+}
+
+@section content_toolbar {
+    @if (await Authorization.IsGrantedAsync(CRM_CodePermissions.Authors.Create))
+    {
+        <abp-button id="NewAuthorButton" text="@L["NewAuthor"].Value" icon="plus" button-type="Primary" />
+    }
+}
+
+<abp-card>
+    <abp-card-body>
+		<abp-row class="mb-3">
+            <abp-column size-md="_12">
+                <form id="SearchForm" autocomplete="off">
+                    <div class="input-group">
+                        <input class="form-control page-search-filter-text" id="FilterText" placeholder="@L["Search"]"/>
+                        <abp-button button-type="Primary" type="submit" icon="search"/>
+                    </div>
+                </form>
+            </abp-column>
+            <abp-column size-md="_12" class="mt-3">
+                <a href="javascript:;" id="AdvancedFilterSectionToggler" class="text-decoration-none">@L["SeeAdvancedFilters"]</a>
+            </abp-column>
+        </abp-row>
+
+        <abp-row id="AdvancedFilterSection" style="display: none;">
+            <abp-column size="_3">
+                <abp-input asp-for="NameFilter" label="@L["Name"].Value" />
+            </abp-column>
+            <abp-column size="_3">
+                <abp-input asp-for="BirthdateFilterMin" label="@L["MinBirthdate"].Value" type="date"/>
+            </abp-column>
+            <abp-column size="_3">
+                <abp-input asp-for="BirthdateFilterMax" label="@L["MaxBirthdate"].Value" type="date"/>
+            </abp-column>
+            <abp-column size="_3">
+                <abp-select asp-for="ActiveFilter" label="@L["Active"].Value" />
+            </abp-column>
+        </abp-row>
+
+        <abp-table striped-rows="true" id="AuthorsTable">
+            <thead>
+				<tr>
+					<th>@L["Actions"]</th>
+					<th>@L["Name"]</th>
+					<th>@L["Birthdate"]</th>
+					<th>@L["Active"]</th>
+
+				</tr>
+            </thead>
+        </abp-table>
+    </abp-card-body>
+</abp-card>

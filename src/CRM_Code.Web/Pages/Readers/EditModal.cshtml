@@ -1,0 +1,77 @@
+@page
+@using Microsoft.AspNetCore.Mvc.Localization
+@using CRM_Code.Localization
+@using CRM_Code.Web.Pages.Readers
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@using CRM_Code.Readers;
+@using System.Globalization
+@inject IHtmlLocalizer<CRM_CodeResource> L
+@model EditModalModel
+@{
+    Layout = null;
+}
+
+<form data-ajaxForm="true" asp-page="/Readers/EditModal" autocomplete="off">
+    <abp-modal id="ReaderEditModal">
+        <abp-modal-header title="@L["Update"].Value"></abp-modal-header>
+
+        <abp-modal-body>
+             <abp-tabs>
+                <abp-tab title="@L["Reader"].Value">
+                    <abp-input asp-for="Id" />
+                    <abp-input asp-for="Reader.ConcurrencyStamp" hidden="true" suppress-label="true"/>
+                    
+            <abp-input asp-for="Reader.NameSurname"/>
+
+            <abp-input asp-for="Reader.EmailAddress"/>
+
+            <abp-select asp-for="Reader.Gender"/>
+
+                    
+                </abp-tab>
+                                 <abp-tab title="@L["Books"].Value">
+                 
+                    <div class="input-group mb-3">
+                        <select id="BookLookup"
+                                        name="BookLookup"
+                                        class="custom-select form-control"
+                                        style="width: 85%"
+                                        data-value="">
+                        </select>
+                        <abp-button button-type="Info" id="AddBookButton" class="text-light">@L["Add"]</abp-button>
+                    </div>
+
+                    <abp-row>
+                        <abp-table style="@(Model.Books.Any() ? "": "display:none")" id="BookTable">
+                            <thead Theme="Dark">
+                            <tr style="text-align: center; vertical-align: middle;">
+                                <th scope="Column" style="text-align: left">@L["Title"]</th>
+                                <th scope="Column"></th>
+                            </tr>
+                            </thead>
+                            <tbody id="BookTableRows">
+                            @for (var index = 0; index < Model.Books.Count; index++)
+                            {
+                                <tr style="text-align: center; vertical-align: middle;" index="@index">
+                                    <td style="display: none" name="id" display-name="@Model.Books[index].Title" index="@index">@Model.Books[index].Id</td>
+                                    <td style="display: none">
+                                        <input value="@Model.Books[index].Id" id="SelectedBookIds[@index]" name="SelectedBookIds[@index]"/>
+                                    </td>
+                                    <td style="text-align: left">@Model.Books[index].Title</td>
+                                    <td style="text-align: right">
+                                        <abp-button button-type="Danger" size="Small" class="text-light bookDeleteButton" index="@index"> <i class="fa fa-trash"></i> </abp-button>
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </abp-table>
+                    </abp-row>
+
+                </abp-tab>
+
+            </abp-tabs>
+        </abp-modal-body>
+
+        <abp-modal-footer buttons="@(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>
+    </abp-modal>
+</form>
